@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="popup.css" />
+  <script src="lib/jquery.js"></script>
+  <script src="lib/color-picker.js"></script>
+  <script src="/path/to/jquery.cookie.js"></script>
+</head>
+<style>
+  #mydiv {
+    position: absolute;
+    z-index: 9;
+    background-color: #f1f1f1;
+    text-align: center;
+    border: 1px solid #d3d3d3;
+  }
+
+  #mydivheader {
+    padding: 10px;
+    cursor: move;
+    z-index: 10;
+    background-color: #2196f3;
+    color: #fff;
+  }
+
+  #cancel-button {
+    display: none;
+  }
+
+  #progress-bar {
+    display: none;
+    margin-left: 35px;
+    width: 80%;
+    padding: 3px;
+    height: 20px;
+    border-radius: 25px;
+    background-color: #898989;
+  }
+
+  #progress-bar-inner {
+    display: none;
+    width: 0;
+    height: 20px;
+    border-radius: 25px;
+    background-color: #FFC90E;
+    transition: width 0.3s;
+  }
+
+  /* width */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  .slider {
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+    background-color: #ccc;
+    border-radius: 30px;
+    position: relative;
+    cursor: pointer;
+    margin-left: 30px;
+    margin-top: 10px;
+  }
+
+  .knob {
+    width: 20px;
+    height: 20px;
+    background-color: #3498db;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: transform 0.2s;
+  }
+
+  .active .knob {
+    transform: translateX(20px);
+  }
+
+  /* #toggleButton {
+    background-color: #3498db;
+    border: none;
+    cursor: pointer;
+    margin-left: 30px;
+    width: 110px;
+  }
+
+  .active {
+    background-color: green;
+  } */
+</style>
+
+<body id="body">
+  <div id="popupShadow" style="
+        background-color: rgb(51 51 51);
+        position: absolute;
+        inset: 0;
+        opacity: 1;
+        z-index: 9998;
+      "></div>
+  <!-- <div id="tabsPanel">
+    <div id="tabSelected" class="tabSelected"></div>
+    <div id="tabAudio" id="audioTab" class="tabText">AUDIO</div>
+    <div id="tabText" id="textTab" class="tabText">TEXT</div>
+    <div id="btnrecording" id="videoTab" class="tabText">Video</div>
+  </div> -->
+
+  <ul id="tabsPanel">
+    <!-- <li id="tabSelected" class="tabSelected"></li> -->
+    <li id="btnrecording" id="videoTab" class="tabText">Video</li>
+    <li id="tabText" id="textTab" class="tabText">TEXT</li>
+    <li id="tabAudio" id="audioTab" class="tabText">AUDIO</li>
+  </ul>
+
+  <div id="bgPanel"></div>
+
+  <div id="header-info">
+    <ul>
+      <div style="display: flex;">
+        <li><label id="lbl-username"></label></li>
+        <button id="btnLogout" class="button">Logout</button>
+      </div>
+      <li>
+        <label>Title:</label><input id="title" type="text" class="header" placeholder="Add title manually" />
+      </li>
+      <li style="margin-right: 165px;">
+        <!-- <label id="lbl-date">Date:</label> -->
+        <input id="date" type="datetime-local" class="header" style="margin-left: 0px;" />
+      </li>
+      <li style="height: 100px">
+        <!-- <label>Description:</label> -->
+        <br /><br />
+        <textarea id="description" placeholder="Description:" class="header" cols="30" rows="10"
+          maxlength="250"></textarea>
+      </li>
+    </ul>
+  </div>
+  <div id="articlePanel">
+
+    <input id="color" type="color" style="margin-left: 33px" value="#F1C40F" /><span
+      style="margin-left: 10px; color:#fff">HighLight Color</span>
+    <button id="btnAdd" class="button enable" style="width: 110px; margin-left: 10px">
+      Add
+    </button>
+    <!-- <input id="percent" class="button" type="number" value="0"> -->
+    <!-- <span
+        style="
+          color: white !important;
+          vertical-align: middle;
+          margin-left: -2px;
+        "
+        ></span
+      > -->
+
+    <br />
+    <div class="slider" id="toggleSlider">
+      <div class="knob"></div>
+    </div>
+    <div style="margin-top: -28px; margin-left: 30px;">
+      <label style="color: white; margin-top: -10px;" id = "qualityVisible">High Quality</label>
+      <label style="color: white; margin-left: 60px; margin-top: -10px;">Static capture:</label>
+      <input id="static" type="checkbox" />
+      <button id="btnCapture" class="button" style="width: fit-content; margin-left: 20px; float: right;
+                  margin-right: 20px; margin-bottom: -10px; background:#7e1010">
+        📸 Capture
+      </button>
+    </div>
+    <div style="display: flex;">
+      <button id="btnHomepage" class="button">Homepage</button>
+      <button id="btnSaveArticle" class="button">Check Article Later</button>
+    </div>
+    <lbl id="lblSelections">- Selections -</lbl>
+    <lbl id="lblSelectionsNone">No selections added yet</lbl>
+    <ul id="selections">
+    </ul>
+    <!-- <button id="btnConnect" class="button disabled">Connect</button>
+		<button id="btnConnections" class="button">See connections</button> -->
+    <!-- footer -->
+    <!-- <br /> -->
+    <!-- <button id="btnHomepage" class="button">Homepage</button>
+    <button id="btnSaveArticle" class="button">Check Article Later</button> -->
+
+    <div id="connectionsPanel" style="display: none">
+      <ul id="connections">
+        <li>
+          <div class="connectionPanel">
+            <span class="removeSelection">X</span>
+            <p class="title">Connection 1</p>
+            <p>Selection 1</p>
+            <p>Selection 2</p>
+          </div>
+        </li>
+      </ul>
+      <button id="btnBack" class="button">Back</button>
+    </div>
+    <div id="capturing">
+      <label id="lblCapturing">&nbsp;Capturing...</label>
+      <img id="record-animation1" class="record-animation" src="images/recording.png" />
+      <button id="btnCancel" style="margin-left: 170px" class="button">
+        Cancel
+      </button>
+    </div>
+  </div>
+
+  <div id="audioPanel">
+    <div style="margin-top: -117px;">
+      <img id="record-animation2" class="record-animation" src="images/recording.png" />
+      <br />
+      <br />
+      <br />
+      <label id="lblRecordTime">00:00:00</label>
+      <br />
+      <div style="margin-top: -140px; margin-left:160px;">
+        <button id="btnRecord" class="btnMedia">
+          <img src="images/record.png" />
+        </button>
+        <button id="btnPause" class="btnMedia disabled">
+          <img src="images/pause.png" />
+        </button>
+        <button id="btnStop" class="btnMedia disabled">
+          <img src="images/stop.png" />
+        </button>
+        <br />
+        <br />
+
+        <button id="btnUploadAudio" class="disabled">Upload</button>
+      </div>
+    </div>
+
+    <div id="uploading-message"
+      style="display: none; margin-left: 50px; margin-right: 50px; color: white; font-size:15px; height: 31px;">Uploading...
+    </div>
+    <div style="display: flex; padding-right: 35px;">
+      <div id="progress-bar">
+        <div id="progress-bar-inner"></div>
+      </div>
+      <button id="cancel-button"
+        style="border-radius: 18px; width: 150px; background: #ce0c0c; border-color: #ce0c0c; color: aliceblue; margin-left: 15px; padding:3px; margin-top:0; margin-bottom:0 ">Cancel</button>
+
+      <div id="success-message" style="display: none; margin-left: 136px; color: white; font-size:15px;">Upload
+        Successful!</div>
+    </div>
+    
+    <audio controls></audio>
+    <textarea id="txtAudioDescription" type="text" placeholder="Description..."></textarea>
+    
+    <div class="ctl-btns" style="text-align: right; padding-right: 10px; height: 45px; margin-top: -20px;">
+      <button id="editButton" class="disabled">📝</button>
+      <button id="deleteButton" class="disabled">❌</button>
+    </div>
+    <div id="audioPanelControl">
+      <select id="slcRecordings" multiple style="height: 180px;"></select>
+    </div>
+  </div>
+
+  <div id="login">
+    <br />
+    <p>Username:</p>
+    <input type="text" id="txtUser" placeholder="Email" values="" />
+    <p>Password:</p>
+    <input type="password" id="txtPassword" placeholder="Password" value="" />
+    <br />
+
+    <button id="btnLogin" type="submit">Log in</button>
+  </div>
+
+  <div id="mydiv" style="display: none;">
+    <div id="mydivheader">Click here to move</div>
+
+    <button style="width: 100px; background:red " type="button" class="btn btn-danger" id="stop" disabled>
+      Stop
+    </button>
+    <button type="button" style="width: 100px; background:#2196f3" id="record" class="btn btn-info">
+      Record Screen
+    </button>
+    <button type="button" style="width: 100px; background:green" id="start" class="btn btn-info" id="crop">
+      Start
+    </button>
+  </div>
+
+  <script src="popup.js"></script>
+  <script src="lib/lame.min.js"></script>
+</body>
+
+</html>

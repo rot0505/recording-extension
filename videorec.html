@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+
+<head>
+	<title>
+		Recorder v2.2
+	</title>
+	<link rel="stylesheet" href="bootstrap.css">
+	<script src="jquary.js"></script>
+	<style type="text/css">
+		.resizers {
+			background: #0000006b;
+			width: 100px;
+			height: 100px;
+			position: absolute;
+			display: none;
+			top: 100px;
+			left: 100px;
+			z-index: 999;
+			border: 3px solid #4286f4;
+			box-sizing: border-box;
+		}
+
+		.resizers .resizer {
+			width: 10px;
+			height: 10px;
+			border-radius: 50%;
+			background: white;
+			border: 3px solid #4286f4;
+			position: absolute;
+		}
+
+		.resizers .resizer.ne {
+
+			right: -5px;
+			top: -5px;
+			cursor: ne-resize;
+		}
+
+		.resizers .resizer.nw {
+			left: -5px;
+			top: -5px;
+			cursor: nw-resize;
+			/*resizer cursor*/
+		}
+
+		.resizers .resizer.sw {
+			left: -5px;
+			bottom: -5px;
+			cursor: sw-resize;
+		}
+
+		.resizers .resizer.se {
+			right: -5px;
+			bottom: -5px;
+			cursor: se-resize;
+		}
+
+		#canvas {
+			display: none;
+		}
+
+		#recordvideo {
+			display: none;
+		}
+
+		button {
+			margin-top: 20px;
+		}
+
+		#stop {
+			margin-left: 20px;
+
+		}
+
+		#cancel-button {
+			display: none;
+		}
+
+		#progress-bar {
+			display: none;
+			margin-left: 100px;
+			width: 70%;
+			padding: 5px;
+			border-radius: 25px;
+			background-color: #898989;
+		}
+
+		#progress-bar-inner {
+			display: none;
+			width: 0;
+			height: 20px;
+			border-radius: 25px;
+			background-color: #FFC90E;
+			transition: width 0.3s;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<div class="">
+			<br>
+			<img src="./images/screen recorder.png" style="width: 80px; margin-left: 305px;" />
+			<br>
+			<h3 style="margin-left: 240px;">Screen Recorder</h3>
+			<br>
+			<label style="width: 100px; margin-left: 50px ">Title</label><input id="title" type="text" style="    width: 400px;
+			border-radius: 10px;"><br>
+			<label style="width: 100px; margin-left: 50px">Description</label><input id="description" type="text" style="width: 400px;
+			border-radius: 10px;"><br>
+			<div class="controls " style="margin-left: 84px">
+				<button type="button" class="btn" id="stop" disabled
+					style="border-radius: 18px; width: 150px; background: #ce0c0c; border-color: #ce0c0c; color: aliceblue;">
+					Stop</button>
+				<button type="button" id="record" class="btn"
+					style="border-radius: 18px; width: 150px; background: #ffc90e; border-color: #ffc90e; color: aliceblue;">
+					Record Screen</button>
+
+				<button type="button" class="btn" id="crop" style="border-radius: 18px; width: 150px; color: #fff;
+				background-color: #0522ff;
+				border-color: #0522ff;"> Crop</button>
+
+				<button type="button" id="start" class="btn btn-info" id="crop"
+					style="border-radius: 18px; width: 150px;">
+					Start</button>
+			</div>
+			<div style="	padding: 10px 62px;	/*position: relative;*/">
+				<div class='resizers'>
+					<div class='resizer ne'></div>
+					<div class='resizer nw'></div>
+					<div class='resizer sw'></div>
+					<div class='resizer se'></div>
+				</div>
+				<video autoplay class="vv" id="videoss" muted
+					style="border: 2px dashed #0000005c; margin-left: 125px; margin-top: 10px;">
+				</video>
+			</div>
+			<canvas id="canvas"></canvas>
+			<button id="recordvideo">Record</button>
+			<div id="uploading-message"
+				style="display: none; color: rgba(11, 0, 0, 0.997); font-size: 22px; font-weight: 500;    margin-left: 246px; ">
+				Uploading...
+			</div>
+			<div style="display: flex;">
+				<div id="progress-bar">
+					<div id="progress-bar-inner"></div>
+				</div>
+				<button id="cancel-button"
+					style="border-radius: 18px; width: 150px; background: #ce0c0c; border-color: #ce0c0c; color: aliceblue; margin-left: 15px; padding:3px; margin-top:0; margin-bottom:0 ">Cancel</button>
+
+
+				<div id="success-message"
+					style="display: none; color: rgba(11, 0, 0, 0.997); font-size: 22px; font-weight: 500;    margin-left: 246px; ">
+					Upload
+					Successful!</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+<script type="text/javascript" src="main.js"></script>
+
+</html>

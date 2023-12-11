@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+	<script src="lib/jquery.js"></script>
+	<script src="lib/jquery-ui.js"></script>
+	<link rel="stylesheet" href="jquery-ui.css">
+	<link rel="stylesheet" href="x.css" />
+</head>
+<style>
+	#cancel-button {
+		display: none;
+	}
+
+	#progress-bar {
+		margin-left: 5px;
+		width: 32%;
+		padding: 3px;
+		height: 20px;
+		border-radius: 25px;
+		background-color: #898989;
+	}
+
+	#progress-bar-inner {
+		display: none;
+		height: 20px;
+		border-radius: 25px;
+		background-color: #FFC90E;
+		transition: width 0.3s;
+	}
+</style>
+
+<body>
+	<div id="topbar" style="display: flex; width:100%">
+		<button id="btn-select">Select area</button>
+		<button id="btn-cancel">Cancel</button>
+		<button id="btn-crop">Crop</button>
+		<button id="btn-upload">Upload</button>
+
+		<div style="display: flex; width:100%">
+			<div id="progress-bar">
+				<div id="progress-bar-inner"></div>
+			</div>
+			<button id="cancel-button"
+				style="border-radius: 18px; width: 150px; background: #ce0c0c; border-color: #ce0c0c; color: aliceblue; margin-left: 15px; padding:3px; margin-top:0; margin-bottom:0 ">Cancel</button>
+			<div id="success-message" style="display: none; margin-left: 136px; color: white; font-size:15px;">Upload
+				Successful!</div>
+		</div>
+
+	</div>
+
+
+	<div id="container">
+		<canvas id="canvas" height="10" width="10"></canvas>
+		<div id="target" class="ui-widget-content">
+			<svg viewBox='0 0 300 100' preserveAspectRatio='none'>
+				<path d='M0,0 300,0 300,100 0,100z' vector-effect='non-scaling-stroke' />
+			</svg>
+			<div class="ui-resizable-handle ui-resizable-n"></div>
+			<div class="ui-resizable-handle ui-resizable-e"></div>
+			<div class="ui-resizable-handle ui-resizable-s"></div>
+			<div class="ui-resizable-handle ui-resizable-w"></div>
+			<div class="ui-resizable-handle ui-resizable-ne"></div>
+			<div class="ui-resizable-handle ui-resizable-se"></div>
+			<div class="ui-resizable-handle ui-resizable-sw"></div>
+			<div class="ui-resizable-handle ui-resizable-nw"></div>
+		</div>
+	</div>
+	<script type="text/javascript" src="x.js"></script>
+</body>
+
+</html>
